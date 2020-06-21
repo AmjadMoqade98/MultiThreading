@@ -17,43 +17,40 @@ public class CustomerController {
     CustomerService customerService;
 
     @GetMapping
-    public List<CustomerDto> getCustomers() {
-        return customerService.getCustomers();
+    public ResponseEntity getCustomers() {
+        return new ResponseEntity(customerService.getCustomers(), HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
-    public CustomerDto getCustomer(@PathVariable("id") String id) {
-            return customerService.getCustomer(id) ;
+    public ResponseEntity getCustomer(@PathVariable("id") String id) {
+        CustomerDto customerDto = customerService.getCustomer(id);
+        if (customerDto == null) {
+            return new ResponseEntity("customer not exist", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity(customerDto, HttpStatus.OK);
+        }
     }
 
     @PostMapping
-    public void AddCustomer(@RequestBody final CustomerDto customerDto) {
-        System.out.println(customerDto.toString());
-        customerService.addCustomer(customerDto) ;
+    public ResponseEntity AddCustomer(@RequestBody final CustomerDto customerDto) {
+        return new ResponseEntity(customerService.addCustomer(customerDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public void UpdateCustomer(@RequestBody final CustomerDto customerDto,@PathVariable("id") String id ) {
+    public ResponseEntity UpdateCustomer(@RequestBody final CustomerDto customerDto, @PathVariable("id") String id) {
         customerDto.setId(id);
-        customerService.updateCustomer(customerDto) ;
+        return new ResponseEntity(customerService.updateCustomer(customerDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteBundle(@PathVariable("id") String id) {
+    public ResponseEntity deleteCustomer(@PathVariable("id") String id) {
         customerService.deleteCustomer(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("customer deleted successfully", HttpStatus.OK);
     }
 
     @DeleteMapping()
-    public ResponseEntity deleteBundles() {
+    public ResponseEntity deleteCustomers() {
         customerService.deleteCustomers();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}/rent")
-    public ResponseEntity RentServer(@RequestParam("space") int space , @PathVariable("id") String id ){
-        customerService.rentSpace(id , space);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("customers deleted successfully", HttpStatus.OK);
     }
 }

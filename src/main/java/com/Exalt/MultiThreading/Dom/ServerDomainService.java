@@ -1,7 +1,11 @@
 package com.Exalt.MultiThreading.Dom;
 
 import com.Exalt.MultiThreading.Constants;
+import com.Exalt.MultiThreading.Dao.CustomerServerDao;
+import com.Exalt.MultiThreading.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Mapper.ServerMapper;
+import com.Exalt.MultiThreading.Repository.CustomerServerRepository;
+import com.Exalt.MultiThreading.Service.CustomerService;
 import com.Exalt.MultiThreading.Service.ServerService;
 import com.devskiller.friendly_id.FriendlyId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +20,20 @@ public class ServerDomainService {
     ServerService serverService;
 
     @Autowired
+    CustomerService customerService ;
+
+    @Autowired
     FriendlyId friendlyId;
 
     @Autowired
     ServerMapper serverMapper;
 
+    @Autowired
+    CustomerServerRepository customerServerRepository ;
+
     public static HashMap<String, ServerDom> serversLocal = new HashMap<String, ServerDom>();
 
-    public void RentServer(String customerId, int space) {
+    public void RentServer(String id, int space) {
         boolean flagCreate = false;
         boolean flagUpdate = false;
         ServerDom serverDom;
@@ -44,6 +54,19 @@ public class ServerDomainService {
             }
         }
 
+        // updating customer space
+        CustomerDto customerDto = customerService.getCustomer(id);
+        customerDto.setReservedSpace(customerDto.getReservedSpace()+space);
+        customerService.updateCustomer(customerDto);
+
+        //adding relation
+
+        //CustomerServerDao customerServerDao =  new CustomerServerDao();
+
+     //   customerServerRepository.save()
+
+
+        // spanning the server
         if (flagCreate) {
             serverService.addServer(serverMapper.serverDomToDto(serverDom));
         } else if (flagUpdate) {

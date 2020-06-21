@@ -10,13 +10,12 @@ public interface CustomerService {
 
     public CustomerDto getCustomer(String id);
 
-    public void addCustomer(CustomerDto customerDto);
+    public CustomerDto addCustomer(CustomerDto customerDto);
 
-    public void updateCustomer(CustomerDto customerDto);
+    public CustomerDto updateCustomer(CustomerDto customerDto);
 
     public void deleteCustomer(String id);
 
     public void deleteCustomers();
 
-    public void rentSpace(String customerId, int space);
 }

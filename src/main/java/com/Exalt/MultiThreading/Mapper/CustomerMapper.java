@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 public class CustomerMapper {
 
     @Autowired
-    ModelMapper modelMapper ;
+    ModelMapper modelMapper;
 
-    public CustomerDao customerDtoToDao (CustomerDto customerDto) {
-        return modelMapper.map(customerDto,CustomerDao.class);
+    public CustomerDao customerDtoToDao(CustomerDto customerDto) {
+        return modelMapper.map(customerDto, CustomerDao.class);
     }
 
-    public CustomerDto customerDaoToDto (CustomerDao customerDao) {
-        return modelMapper.map(customerDao,CustomerDto.class);
+    public CustomerDto customerDaoToDto(CustomerDao customerDao) {
+        return modelMapper.map(customerDao, CustomerDto.class);
     }
 }

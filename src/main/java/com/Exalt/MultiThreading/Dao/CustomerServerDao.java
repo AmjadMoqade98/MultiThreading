@@ -11,8 +11,6 @@ import org.springframework.data.annotation.Id;
 public class CustomerServerDao {
 
     @Id
-    int ServerId ;
-    int CustomerId ;
+    String id ;
     int Space ;
-
 }
