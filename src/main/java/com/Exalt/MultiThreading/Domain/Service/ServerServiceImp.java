@@ -42,7 +42,6 @@ public class ServerServiceImp implements ServerService {
     public List<ServerDto> getServers() {
         List<ServerDto> serverDtos = new ArrayList<>();
         serverRepository.findAll().forEach(serverDao-> {
-            serverDomainService.addServerLocal(serverMapper.serverDaoToDom(serverDao));
             serverDtos.add(serverMapper.serverDaoToDto(serverDao));
         });
         return serverDtos;
