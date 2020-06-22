@@ -1,4 +1,4 @@
-package com.Exalt.MultiThreading.Runnable;
+package com.Exalt.MultiThreading.Domain.Runnable;
 
 import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Service.ServerService;
