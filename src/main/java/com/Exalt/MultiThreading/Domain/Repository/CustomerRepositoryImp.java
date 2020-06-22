@@ -1,4 +1,4 @@
-package com.Exalt.MultiThreading.Infrastructure;
+package com.Exalt.MultiThreading.Domain.Repository;
 
 import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
 import com.Exalt.MultiThreading.Infrastructure.Repository.CustomerRepository;
@@ -11,9 +11,6 @@ public class CustomerRepositoryImp {
 
     @Autowired
     CustomerRepository customerRepository ;
-
-    @Autowired
-    AerospikeTemplate aerospikeTemplate ;
 
     public CustomerDao findOne(String id) {
         return customerRepository.findOne(id);

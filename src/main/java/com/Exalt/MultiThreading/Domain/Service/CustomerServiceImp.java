@@ -3,7 +3,7 @@ package com.Exalt.MultiThreading.Domain.Service;
 import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
 import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.CustomerMapper;
-import com.Exalt.MultiThreading.Infrastructure.CustomerRepositoryImp;
+import com.Exalt.MultiThreading.Domain.Repository.CustomerRepositoryImp;
 import com.Exalt.MultiThreading.Domain.Dom.ServerDomainService;
 import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
