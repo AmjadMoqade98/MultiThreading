@@ -3,9 +3,10 @@ package com.Exalt.MultiThreading.Domain.Dom;
 import com.Exalt.MultiThreading.Domain.Constants;
 import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
+import com.Exalt.MultiThreading.Domain.Runnable.UpdateServer;
 import com.Exalt.MultiThreading.Domain.Service.CustomerService;
 import com.Exalt.MultiThreading.Domain.Service.ServerService;
-import com.Exalt.MultiThreading.Domain.Runnable.ServerSpan;
+import com.Exalt.MultiThreading.Domain.Runnable.SpanServer;
 import com.devskiller.friendly_id.FriendlyId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Component
-public class ServerDomainService {
+public class ServerProvider {
 
     @Autowired
     ServerService serverService;
@@ -29,7 +30,10 @@ public class ServerDomainService {
     ServerMapper serverMapper;
 
     @Autowired
-    ServerSpan serverSpan;
+    SpanServer serverSpan;
+
+    @Autowired
+    UpdateServer updateServer ;
 
     public static HashMap<String, ServerDom> serversLocal = new HashMap<String, ServerDom>();
 
@@ -54,14 +58,15 @@ public class ServerDomainService {
         // spanning the server
         if (allocationMethod == AllocationMethod.Span) {
             serverSpan.setServerDto(serverMapper.serverDomToDto(serverDom));
-            Thread spanThread = new Thread(serverSpan);
-            spanThread.start();
+            Thread spanServerThread = new Thread(serverSpan);
+            spanServerThread.start();
         }
         //allocate space in existing server
         else if (allocationMethod == AllocationMethod.Update) {
+            updateServer.setServerDom(serverDom);
+            Thread updateServerThread = new Thread(updateServer);
+            updateServerThread.start();
             // wait until the server became active
-            while (!serverDom.isActive())
-            serverService.updateServer(serverMapper.serverDomToDto(serverDom));
         }
     }
 

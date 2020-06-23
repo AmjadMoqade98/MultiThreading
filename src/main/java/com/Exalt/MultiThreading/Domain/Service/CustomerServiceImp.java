@@ -4,7 +4,7 @@ import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
 import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.CustomerMapper;
 import com.Exalt.MultiThreading.Domain.Repository.CustomerRepositoryImp;
-import com.Exalt.MultiThreading.Domain.Dom.ServerDomainService;
+import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
 import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
 import com.devskiller.friendly_id.FriendlyId;
@@ -24,7 +24,7 @@ public class CustomerServiceImp implements CustomerService {
     CustomerMapper customerMapper;
 
     @Autowired
-    ServerDomainService serverDomainService;
+    ServerProvider serverDomainService;
 
     @Autowired
     FriendlyId friendlyId;
@@ -61,8 +61,12 @@ public class CustomerServiceImp implements CustomerService {
         return customerMapper.customerDaoToDto(customerDao);
     }
 
-    public void deleteCustomer(String id) {
+    public boolean deleteCustomer(String id) {
+        if (customerValidation.validateCustomerId(id) == false) {
+            return false;
+        }
         customerRepositoryImp.delete(id);
+        return true ;
     }
 
     public void deleteCustomers() {

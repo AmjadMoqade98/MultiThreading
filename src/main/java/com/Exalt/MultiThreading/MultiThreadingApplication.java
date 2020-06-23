@@ -1,7 +1,7 @@
 package com.Exalt.MultiThreading;
 
 import com.Exalt.MultiThreading.Domain.Dom.ServerDom;
-import com.Exalt.MultiThreading.Domain.Dom.ServerDomainService;
+import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class MultiThreadingApplication implements CommandLineRunner {
         //load the servers from the database to the local storage
         serverRepository.findAll().forEach(serverDao -> {
             ServerDom serverDom = serverMapper.serverDaoToDom(serverDao);
-            ServerDomainService.serversLocal.put(serverDom.getId(),serverDom);
+            ServerProvider.serversLocal.put(serverDom.getId(),serverDom);
         });
     }
 }

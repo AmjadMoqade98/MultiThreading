@@ -14,7 +14,7 @@ public interface CustomerService {
 
     public CustomerDto updateCustomer(CustomerDto customerDto);
 
-    public void deleteCustomer(String id);
+    public boolean deleteCustomer(String id);
 
     public void deleteCustomers();
 

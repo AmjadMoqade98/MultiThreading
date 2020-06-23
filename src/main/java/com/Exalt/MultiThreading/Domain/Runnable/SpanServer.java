@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
-public class ServerSpan implements Runnable{
+public class SpanServer implements Runnable{
 
     @Autowired
     ServerService serverService ;

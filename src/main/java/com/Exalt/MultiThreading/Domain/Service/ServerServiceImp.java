@@ -4,7 +4,7 @@ import com.Exalt.MultiThreading.Domain.Dao.ServerDao;
 import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
-import com.Exalt.MultiThreading.Domain.Dom.ServerDomainService;
+import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
 import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
 import com.Exalt.MultiThreading.Domain.validation.ServerValidation;
@@ -25,7 +25,7 @@ public class ServerServiceImp implements ServerService {
     ServerMapper serverMapper;
 
     @Autowired
-    ServerDomainService serverDomainService;
+    ServerProvider serverDomainService;
 
     @Autowired
     FriendlyId friendlyId;
@@ -61,7 +61,7 @@ public class ServerServiceImp implements ServerService {
         }
         ServerDao serverDao = serverMapper.serverDtoToDao(serverDto);
         try {
-            Thread.sleep(10000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
