@@ -1,14 +1,19 @@
 package com.Exalt.MultiThreading.Domain.Dom;
 
 import com.Exalt.MultiThreading.Domain.Constants;
+import com.Exalt.MultiThreading.Domain.Dao.ServerDao;
 import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Domain.Runnable.UpdateServer;
 import com.Exalt.MultiThreading.Domain.Service.CustomerService;
 import com.Exalt.MultiThreading.Domain.Service.ServerService;
 import com.Exalt.MultiThreading.Domain.Runnable.SpanServer;
+import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
 import com.devskiller.friendly_id.FriendlyId;
+import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +35,7 @@ public class ServerProvider {
     ServerMapper serverMapper;
 
     @Autowired
-    SpanServer serverSpan;
-
-    @Autowired
-    UpdateServer updateServer ;
+    ServerRepository serverRepository;
 
     public static HashMap<String, ServerDom> serversLocal = new HashMap<String, ServerDom>();
 
@@ -42,32 +44,54 @@ public class ServerProvider {
     }
 
     public void RentServer(String customerId, int space) {
+        System.out.println(this + "  " + Thread.currentThread());
         AllocationMethod allocationMethod;
         String serverId = checkAvailableServer(space);
         allocationMethod = (serverId.equals("-1")) ?
                 AllocationMethod.Span : AllocationMethod.Update;
 
-        ServerDom serverDom = rentLocally(serverId, space, allocationMethod);
+        // allocate the space in existing server that have enough space
+        if (allocationMethod == AllocationMethod.Update) {
+            //update server locally
+            ServerDom serverDom = updateLocally(serverId, space);
 
-        // updating customer space
+            //thread to update server in the database
+            UpdateServer updateServer = new UpdateServer(serverRepository, serverMapper, serverDom);
+            Thread updateServerThread = new Thread(updateServer);
+            updateServerThread.start();
+
+        }
+        // span new server when there no server with enough space
+        else if (allocationMethod == AllocationMethod.Span) {
+            //create locally
+            ServerDom serverDom = spanLocally(space);
+            //spanning the server
+            SpanServer spanServer = new SpanServer(this, serverRepository, serverMapper, serverDom);
+            Thread spanServerThread = new Thread(spanServer);
+            spanServerThread.start();
+        }
+
+        //update customer
         CustomerDto customerDto = customerService.getCustomer(customerId);
         customerDto.setReservedSpace(customerDto.getReservedSpace() + space);
         customerService.updateCustomer(customerDto);
+    }
 
+    public ServerDom spanLocally(int space) {
+        String serverId = friendlyId.createFriendlyId();
+        ServerDom serverDom = new ServerDom();
+        serverDom.setActive(false);
+        serverDom.setId(serverId);
+        serverDom.setRemainingCapacity(Constants.ServerMaximumCapacity - space);
+        serversLocal.put(serverId, serverDom);
+        return serverDom;
+    }
 
-        // spanning the server
-        if (allocationMethod == AllocationMethod.Span) {
-            serverSpan.setServerDto(serverMapper.serverDomToDto(serverDom));
-            Thread spanServerThread = new Thread(serverSpan);
-            spanServerThread.start();
-        }
-        //allocate space in existing server
-        else if (allocationMethod == AllocationMethod.Update) {
-            updateServer.setServerDom(serverDom);
-            Thread updateServerThread = new Thread(updateServer);
-            updateServerThread.start();
-            // wait until the server became active
-        }
+    public ServerDom updateLocally(String serverId, int space) {
+        ServerDom serverDom = serversLocal.get(serverId);
+        serverDom.setRemainingCapacity(serverDom.getRemainingCapacity() - space);
+        serversLocal.put(serverId, serverDom);
+        return serverDom;
     }
 
     public String checkAvailableServer(int targetSpace) {
@@ -77,29 +101,8 @@ public class ServerProvider {
                 return server.getKey();
             }
         }
-
         //return -1 if there is no available server with enough space
         return "-1";
-    }
-
-    @Async
-    public ServerDom rentLocally(String serverId, int space, AllocationMethod allocationMethod) {
-        ServerDom serverDom = null;
-        // span new server
-        if (allocationMethod == AllocationMethod.Span) {
-            serverId = friendlyId.createFriendlyId();
-            serverDom = new ServerDom();
-            serverDom.setActive(false);
-            serverDom.setId(serverId);
-            serverDom.setRemainingCapacity(Constants.ServerMaximumCapacity - space);
-            serversLocal.put(serverId, serverDom);
-        }
-        //Allocate space from existing server
-        else if (allocationMethod == AllocationMethod.Update) {
-            serverDom = serversLocal.get(serverId);
-            serverDom.setRemainingCapacity(serverDom.getRemainingCapacity() - space);
-        }
-        return serverDom;
     }
 
     public static HashMap<String, ServerDom> sortBySpace(HashMap<String, ServerDom> hm) {
@@ -121,20 +124,12 @@ public class ServerProvider {
         return temp;
     }
 
-    public void addServerLocal(ServerDom serverDom) {
-        serversLocal.put(serverDom.getId(), serverDom);
-    }
-
     public void deleteServerLocal(String id) {
         serversLocal.remove(id);
     }
 
     public void clearServersLocal() {
         serversLocal.clear();
-    }
-
-    public void updateServerLocal(ServerDom serverDom) {
-        serversLocal.put(serverDom.getId(), serverDom);
     }
 
     public void activateServerLocal(String id) {

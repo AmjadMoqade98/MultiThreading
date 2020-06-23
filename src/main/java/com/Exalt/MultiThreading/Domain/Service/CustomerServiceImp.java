@@ -37,7 +37,7 @@ public class CustomerServiceImp implements CustomerService {
 
     public List<CustomerDto> getCustomers() {
         List<CustomerDto> customerDtos = new ArrayList<>();
-        customerRepositoryImp.findAll().forEach(customerDao->{
+        customerRepositoryImp.findAll().forEach(customerDao -> {
             customerDtos.add(customerMapper.customerDaoToDto(customerDao));
         });
         return customerDtos;
@@ -66,12 +66,10 @@ public class CustomerServiceImp implements CustomerService {
             return false;
         }
         customerRepositoryImp.delete(id);
-        return true ;
+        return true;
     }
 
     public void deleteCustomers() {
         customerRepositoryImp.deleteAll();
     }
-
-
 }

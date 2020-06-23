@@ -10,13 +10,9 @@ public interface ServerService {
 
     public ServerDto getServer(String id);
 
-    public ServerDto updateServer(ServerDto serverDto);
-
-    public ServerDto addServer(ServerDto serverDto);
+    public boolean rentServer(String id, int space);
 
     public void deleteServer(String id);
 
     public void deleteServers();
-
-    public boolean rentSpace(String customerId, int space);
 }

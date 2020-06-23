@@ -21,6 +21,13 @@ public class ServerMapper {
         return serverDao;
     }
 
+    public ServerDao serverDomToDao(ServerDom serverDom) {
+        ServerDao serverDao = modelMapper.map(serverDom, ServerDao.class);
+        serverDao.setRemainingCap(serverDom.getRemainingCapacity());
+        serverDao.setTotalCap(Constants.ServerMaximumCapacity);
+        return serverDao;
+    }
+
     public ServerDto serverDaoToDto(ServerDao serverDao) {
         ServerDto serverDto = modelMapper.map(serverDao, ServerDto.class);
         serverDto.setRemainingCapacity(serverDao.getRemainingCap());
