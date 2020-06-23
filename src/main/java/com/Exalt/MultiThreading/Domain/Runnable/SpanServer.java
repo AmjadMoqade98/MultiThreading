@@ -1,26 +1,34 @@
 package com.Exalt.MultiThreading.Domain.Runnable;
 
-import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
-import com.Exalt.MultiThreading.Domain.Service.ServerService;
+import com.Exalt.MultiThreading.Domain.Dom.ServerDom;
+import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
+import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
+import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
-@Scope("prototype")
-public class SpanServer implements Runnable{
+@AllArgsConstructor
+public class SpanServer implements Runnable {
 
-    @Autowired
-    ServerService serverService ;
-
-    ServerDto serverDto ;
+    ServerProvider serverProvider;
+    ServerRepository serverRepository;
+    ServerMapper serverMapper;
+    ServerDom serverDom;
 
     @Override
     public void run() {
-        serverService.addServer(serverDto);
+        try {
+            Thread.sleep(20000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        serverProvider.activateServerLocal(serverDom.getId());
+        serverRepository.save(serverMapper.serverDomToDao(serverDom));
     }
 
-    public void setServerDto(ServerDto serverDto) {
-        this.serverDto = serverDto;
+    public void setServerDom(ServerDom serverDom) {
+        this.serverDom = serverDom;
     }
 }

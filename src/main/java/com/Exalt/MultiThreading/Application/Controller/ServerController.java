@@ -29,23 +29,23 @@ public class ServerController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity addServer(@RequestBody final ServerDto serverDto) {
-        return new ResponseEntity(serverService.addServer(serverDto), HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity addServer(@RequestBody final ServerDto serverDto) {
+//        return new ResponseEntity(serverService.rentServer(serverDto), HttpStatus.CREATED);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity updateServer(@RequestBody final ServerDto serverDto, @PathVariable("id") String id) {
+//        serverDto.setId(id);
+//        return new ResponseEntity(serverService.updateServer(serverDto), HttpStatus.OK);
+//    }
 
-    @PutMapping("/{id}")
-    public ResponseEntity updateServer(@RequestBody final ServerDto serverDto, @PathVariable("id") String id) {
-        serverDto.setId(id);
-        return new ResponseEntity(serverService.updateServer(serverDto), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteServer(@PathVariable("id") String id) {
-        serverService.deleteServer(id);
-        return new ResponseEntity<>("server deleted successfully", HttpStatus.OK);
-    }
-
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity deleteServer(@PathVariable("id") String id) {
+//        serverService.deleteServer(id);
+//        return new ResponseEntity<>("server deleted successfully", HttpStatus.OK);
+//    }
+//
     @DeleteMapping()
     public ResponseEntity deleteServers() {
         serverService.deleteServers();
@@ -54,7 +54,8 @@ public class ServerController {
 
     @GetMapping("/rent")
     public ResponseEntity RentServer(@RequestParam("space") int space, @RequestParam("id") String id) {
-        if (serverService.rentSpace(id, space) == true) {
+
+        if (serverService.rentServer(id, space) == true) {
             return new ResponseEntity<>("server rented successfully",HttpStatus.OK);
         } else {
             return new ResponseEntity<>("Invalid space or Invalid customerId", HttpStatus.BAD_REQUEST);

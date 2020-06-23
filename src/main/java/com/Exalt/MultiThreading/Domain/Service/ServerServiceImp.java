@@ -25,7 +25,7 @@ public class ServerServiceImp implements ServerService {
     ServerMapper serverMapper;
 
     @Autowired
-    ServerProvider serverDomainService;
+    ServerProvider serverProvider;
 
     @Autowired
     FriendlyId friendlyId;
@@ -54,46 +54,25 @@ public class ServerServiceImp implements ServerService {
         return serverMapper.serverDaoToDto(serverRepository.findOne(id));
     }
 
-    public ServerDto addServer(ServerDto serverDto) {
-        if (serverDto.getId() == null) {
-            serverDto.setId(friendlyId.createFriendlyId());
-            serverDomainService.addServerLocal(serverMapper.serverDtoToDom(serverDto));
-        }
-        ServerDao serverDao = serverMapper.serverDtoToDao(serverDto);
-        try {
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        serverDomainService.activateServerLocal(serverDto.getId());
-        serverRepository.save(serverDao);
-        return serverDto;
-    }
-
-    public ServerDto updateServer(ServerDto serverDto) {
-        ServerDao serverDao = serverRepository.save(serverMapper.serverDtoToDao(serverDto));
-        serverDomainService.updateServerLocal(serverMapper.serverDtoToDom(serverDto));
-        return serverMapper.serverDaoToDto(serverDao);
-    }
 
     public void deleteServer(String id) {
         serverRepository.delete(id);
-        serverDomainService.deleteServerLocal(id);
+        serverProvider.deleteServerLocal(id);
     }
 
     public void deleteServers() {
         serverRepository.deleteAll();
-        serverDomainService.clearServersLocal();
+        serverProvider.clearServersLocal();
     }
 
-    public boolean rentSpace(String id, int space) {
+    public boolean rentServer(String id, int space) {
         if(customerValidation.validateCustomerId(id) == false) {
             return false ;
         }
         if (rentValidation.validateRentSpace(space) == false) {
             return false;
         }
-        serverDomainService.RentServer(id, space);
+        serverProvider.RentServer(id, space);
         return true;
     }
 }
