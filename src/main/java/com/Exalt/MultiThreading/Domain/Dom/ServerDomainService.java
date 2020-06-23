@@ -59,14 +59,14 @@ public class ServerDomainService {
         }
         //allocate space in existing server
         else if (allocationMethod == AllocationMethod.Update) {
-            while (!serverDom.isActive()) {
-            }
+            // wait until the server became active
+            while (!serverDom.isActive())
             serverService.updateServer(serverMapper.serverDomToDto(serverDom));
         }
     }
 
     public String checkAvailableServer(int targetSpace) {
-        serversLocal = sortByValue(serversLocal);
+        serversLocal = sortBySpace(serversLocal);
         for (Map.Entry<String, ServerDom> server : serversLocal.entrySet()) {
             if (server.getValue().getRemainingCapacity() >= targetSpace) {
                 return server.getKey();
@@ -97,7 +97,7 @@ public class ServerDomainService {
         return serverDom;
     }
 
-    public static HashMap<String, ServerDom> sortByValue(HashMap<String, ServerDom> hm) {
+    public static HashMap<String, ServerDom> sortBySpace(HashMap<String, ServerDom> hm) {
         List<Map.Entry<String, ServerDom>> list =
                 new LinkedList<>(hm.entrySet());
 

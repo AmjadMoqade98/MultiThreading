@@ -57,7 +57,7 @@ public class ServerController {
         if (serverService.rentSpace(id, space) == true) {
             return new ResponseEntity<>("server rented successfully",HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Invalid space or Invalid customerId", HttpStatus.OK);
+            return new ResponseEntity<>("Invalid space or Invalid customerId", HttpStatus.BAD_REQUEST);
         }
     }
 }
