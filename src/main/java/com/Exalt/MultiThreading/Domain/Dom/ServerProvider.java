@@ -1,9 +1,7 @@
 package com.Exalt.MultiThreading.Domain.Dom;
 
 import com.Exalt.MultiThreading.Domain.Constants;
-import com.Exalt.MultiThreading.Domain.Dao.ServerDao;
 import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
-import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Domain.Runnable.UpdateServer;
 import com.Exalt.MultiThreading.Domain.Service.CustomerService;
@@ -11,10 +9,7 @@ import com.Exalt.MultiThreading.Domain.Service.ServerService;
 import com.Exalt.MultiThreading.Domain.Runnable.SpanServer;
 import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
 import com.devskiller.friendly_id.FriendlyId;
-import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -37,7 +32,7 @@ public class ServerProvider {
     @Autowired
     ServerRepository serverRepository;
 
-    public static HashMap<String, ServerDom> serversLocal = new HashMap<String, ServerDom>();
+    public static HashMap<String, ServerDom> serversCache = new HashMap<String, ServerDom>();
 
     enum AllocationMethod {
         Update, Span
@@ -83,20 +78,20 @@ public class ServerProvider {
         serverDom.setActive(false);
         serverDom.setId(serverId);
         serverDom.setRemainingCapacity(Constants.ServerMaximumCapacity - space);
-        serversLocal.put(serverId, serverDom);
+        serversCache.put(serverId, serverDom);
         return serverDom;
     }
 
     public ServerDom updateLocally(String serverId, int space) {
-        ServerDom serverDom = serversLocal.get(serverId);
+        ServerDom serverDom = serversCache.get(serverId);
         serverDom.setRemainingCapacity(serverDom.getRemainingCapacity() - space);
-        serversLocal.put(serverId, serverDom);
+        serversCache.put(serverId, serverDom);
         return serverDom;
     }
 
     public String checkAvailableServer(int targetSpace) {
-        serversLocal = sortBySpace(serversLocal);
-        for (Map.Entry<String, ServerDom> server : serversLocal.entrySet()) {
+        serversCache = sortBySpace(serversCache);
+        for (Map.Entry<String, ServerDom> server : serversCache.entrySet()) {
             if (server.getValue().getRemainingCapacity() >= targetSpace) {
                 return server.getKey();
             }
@@ -125,14 +120,14 @@ public class ServerProvider {
     }
 
     public void deleteServerLocal(String id) {
-        serversLocal.remove(id);
+        serversCache.remove(id);
     }
 
     public void clearServersLocal() {
-        serversLocal.clear();
+        serversCache.clear();
     }
 
     public void activateServerLocal(String id) {
-        serversLocal.get(id).setActive(true);
+        serversCache.get(id).setActive(true);
     }
 }

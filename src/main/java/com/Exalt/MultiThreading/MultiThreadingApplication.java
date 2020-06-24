@@ -26,10 +26,10 @@ public class MultiThreadingApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        //load the servers from the database to the local storage
+        //caching servers locally
         serverRepository.findAll().forEach(serverDao -> {
             ServerDom serverDom = serverMapper.serverDaoToDom(serverDao);
-            ServerProvider.serversLocal.put(serverDom.getId(),serverDom);
+            ServerProvider.serversCache.put(serverDom.getId(),serverDom);
         });
     }
 }
