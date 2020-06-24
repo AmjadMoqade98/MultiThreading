@@ -14,7 +14,7 @@ and serve all the customer as fast as possible
 
 suppose that I have a pool of three servers each has a free space of 30 Gigas. And then I was hit by simultaneous two requests in which each one of them needs 50 Gigas.
 
-**System Behavior : **
+**System Behavior :**
 1. The system will create a thread for each request
 2. the first request will enter and try to allocate 50 space.<br/> the system will open new thread which will span new server with 50 remaining space (this will take 20 seconds ).
 3. the second request will enter and try to allocate 50 space. <br/> the system will know that there will be a server with 50 remaining capacity event 
