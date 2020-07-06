@@ -1,4 +1,4 @@
-package com.Exalt.MultiThreading.Domain.Dto;
+package com.Exalt.MultiThreading.Application.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

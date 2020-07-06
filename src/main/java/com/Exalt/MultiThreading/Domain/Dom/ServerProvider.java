@@ -1,7 +1,7 @@
 package com.Exalt.MultiThreading.Domain.Dom;
 
 import com.Exalt.MultiThreading.Domain.Constants;
-import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Domain.Runnable.UpdateServer;
 import com.Exalt.MultiThreading.Domain.Service.CustomerService;

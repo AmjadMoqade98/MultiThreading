@@ -1,6 +1,6 @@
 package com.Exalt.MultiThreading.Application.Controller;
 
-import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

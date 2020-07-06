@@ -4,6 +4,7 @@ import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
 import com.Exalt.MultiThreading.Infrastructure.Repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.aerospike.core.AerospikeTemplate;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,6 +27,10 @@ public class CustomerRepositoryImp {
 
     public void deleteAll() {
         customerRepository.deleteAll();
+    }
+
+    public Iterable<CustomerDao> findAll(PageRequest pagable){
+        return customerRepository.findAll(pagable);
     }
 
     public Iterable<CustomerDao> findAll(){

@@ -1,6 +1,6 @@
 package com.Exalt.MultiThreading.Domain.Service;
 
-import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
+import com.Exalt.MultiThreading.Application.Dto.ServerDto;
 
 import java.util.List;
 

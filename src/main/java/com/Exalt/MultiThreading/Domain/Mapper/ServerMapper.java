@@ -3,7 +3,7 @@ package com.Exalt.MultiThreading.Domain.Mapper;
 import com.Exalt.MultiThreading.Domain.Constants;
 import com.Exalt.MultiThreading.Domain.Dao.ServerDao;
 import com.Exalt.MultiThreading.Domain.Dom.ServerDom;
-import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
+import com.Exalt.MultiThreading.Application.Dto.ServerDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

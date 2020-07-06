@@ -1,7 +1,7 @@
 package com.Exalt.MultiThreading.Domain.Service;
 
 import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
-import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.CustomerMapper;
 import com.Exalt.MultiThreading.Domain.Repository.CustomerRepositoryImp;
 import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
@@ -9,6 +9,8 @@ import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
 import com.devskiller.friendly_id.FriendlyId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +39,7 @@ public class CustomerServiceImp implements CustomerService {
 
     public List<CustomerDto> getCustomers() {
         List<CustomerDto> customerDtos = new ArrayList<>();
+        PageRequest pagable = new PageRequest(0,4 , new Sort(Sort.Direction.DESC,"reservedSpace"));
         customerRepositoryImp.findAll().forEach(customerDao -> {
             customerDtos.add(customerMapper.customerDaoToDto(customerDao));
         });

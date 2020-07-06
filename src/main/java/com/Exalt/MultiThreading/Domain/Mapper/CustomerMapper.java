@@ -1,7 +1,7 @@
 package com.Exalt.MultiThreading.Domain.Mapper;
 
 import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
-import com.Exalt.MultiThreading.Domain.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,6 @@
 package com.Exalt.MultiThreading.Domain.Service;
 
-import com.Exalt.MultiThreading.Domain.Dao.ServerDao;
-import com.Exalt.MultiThreading.Domain.Dto.ServerDto;
+import com.Exalt.MultiThreading.Application.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
 import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
