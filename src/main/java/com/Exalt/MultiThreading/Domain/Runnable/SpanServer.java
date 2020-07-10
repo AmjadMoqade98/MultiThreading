@@ -1,12 +1,10 @@
 package com.Exalt.MultiThreading.Domain.Runnable;
 
-import com.Exalt.MultiThreading.Domain.Dom.ServerDom;
-import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
+import com.Exalt.MultiThreading.Domain.Domain.Server;
+import com.Exalt.MultiThreading.Domain.Service.ServerProvider;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
-import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
+import com.Exalt.MultiThreading.Domain.Repository.ServerRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 public class SpanServer implements Runnable {
@@ -14,7 +12,7 @@ public class SpanServer implements Runnable {
     ServerProvider serverProvider;
     ServerRepository serverRepository;
     ServerMapper serverMapper;
-    ServerDom serverDom;
+    Server serverDom;
 
     @Override
     public void run() {
@@ -28,7 +26,7 @@ public class SpanServer implements Runnable {
         serverRepository.save(serverMapper.serverDomToDao(serverDom));
     }
 
-    public void setServerDom(ServerDom serverDom) {
+    public void setServerDom(Server serverDom) {
         this.serverDom = serverDom;
     }
 }

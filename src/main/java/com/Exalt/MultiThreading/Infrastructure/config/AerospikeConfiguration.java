@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableAerospikeRepositories(basePackages = "com.Exalt.MultiThreading.Infrastructure.Repository")
+@EnableAerospikeRepositories(basePackages = "com.Exalt.MultiThreading.Domain.Repository")
 public class AerospikeConfiguration {
 
     @Bean

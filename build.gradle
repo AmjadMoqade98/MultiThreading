@@ -21,6 +21,7 @@ dependencyManagement {
 }
 
 dependencies {
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation "com.aerospike:spring-data-aerospike:1.0.2.RELEASE"
@@ -29,8 +30,11 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    testCompile "org.junit.jupiter:junit-jupiter-api:5.0.0-M5"
     compileOnly 'org.projectlombok:lombok:1.18.8'
     annotationProcessor 'org.projectlombok:lombok:1.18.8'
+    compile group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
+
 }
 
 test {

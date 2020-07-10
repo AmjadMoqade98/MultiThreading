@@ -1,13 +1,12 @@
-package com.Exalt.MultiThreading.Domain.Dom;
+package com.Exalt.MultiThreading.Domain.Service;
 
 import com.Exalt.MultiThreading.Domain.Constants;
 import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
+import com.Exalt.MultiThreading.Domain.Domain.Server;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
 import com.Exalt.MultiThreading.Domain.Runnable.UpdateServer;
-import com.Exalt.MultiThreading.Domain.Service.CustomerService;
-import com.Exalt.MultiThreading.Domain.Service.ServerService;
 import com.Exalt.MultiThreading.Domain.Runnable.SpanServer;
-import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
+import com.Exalt.MultiThreading.Domain.Repository.ServerRepository;
 import com.devskiller.friendly_id.FriendlyId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,7 @@ public class ServerProvider {
     @Autowired
     ServerRepository serverRepository;
 
-    public static HashMap<String, ServerDom> serversCache = new HashMap<String, ServerDom>();
+    public static HashMap<String, Server> serversCache = new HashMap<String, Server>();
 
     enum AllocationMethod {
         Update, Span
@@ -48,7 +47,7 @@ public class ServerProvider {
         // allocate the space in existing server that have enough space
         if (allocationMethod == AllocationMethod.Update) {
             //update server locally
-            ServerDom serverDom = updateLocally(serverId, space);
+            Server serverDom = updateLocally(serverId, space);
 
             //thread to update server in the database
             UpdateServer updateServer = new UpdateServer(serverRepository, serverMapper, serverDom);
@@ -59,7 +58,7 @@ public class ServerProvider {
         // span new server when there no server with enough space
         else if (allocationMethod == AllocationMethod.Span) {
             //create locally
-            ServerDom serverDom = spanLocally(space);
+            Server serverDom = spanLocally(space);
             //spanning the server
             SpanServer spanServer = new SpanServer(this, serverRepository, serverMapper, serverDom);
             Thread spanServerThread = new Thread(spanServer);
@@ -72,9 +71,9 @@ public class ServerProvider {
         customerService.updateCustomer(customerDto);
     }
 
-    public ServerDom spanLocally(int space) {
+    public Server spanLocally(int space) {
         String serverId = friendlyId.createFriendlyId();
-        ServerDom serverDom = new ServerDom();
+        Server serverDom = new Server();
         serverDom.setActive(false);
         serverDom.setId(serverId);
         serverDom.setRemainingCapacity(Constants.ServerMaximumCapacity - space);
@@ -82,38 +81,41 @@ public class ServerProvider {
         return serverDom;
     }
 
-    public ServerDom updateLocally(String serverId, int space) {
-        ServerDom serverDom = serversCache.get(serverId);
+    public Server updateLocally(String serverId, int space) {
+        Server serverDom = serversCache.get(serverId);
         serverDom.setRemainingCapacity(serverDom.getRemainingCapacity() - space);
         serversCache.put(serverId, serverDom);
         return serverDom;
     }
 
     public String checkAvailableServer(int targetSpace) {
+
         serversCache = sortBySpace(serversCache);
-        for (Map.Entry<String, ServerDom> server : serversCache.entrySet()) {
+        for (Map.Entry<String, Server> server : serversCache.entrySet()) {
             if (server.getValue().getRemainingCapacity() >= targetSpace) {
                 return server.getKey();
             }
         }
         //return -1 if there is no available server with enough space
         return "-1";
+
+
     }
 
-    public static HashMap<String, ServerDom> sortBySpace(HashMap<String, ServerDom> hm) {
-        List<Map.Entry<String, ServerDom>> list =
+    public static HashMap<String, Server> sortBySpace(HashMap<String, Server> hm) {
+        List<Map.Entry<String, Server>> list =
                 new LinkedList<>(hm.entrySet());
 
-        Collections.sort(list, new Comparator<Map.Entry<String, ServerDom>>() {
-            public int compare(Map.Entry<String, ServerDom> o1,
-                               Map.Entry<String, ServerDom> o2) {
+        Collections.sort(list, new Comparator<Map.Entry<String, Server>>() {
+            public int compare(Map.Entry<String, Server> o1,
+                               Map.Entry<String, Server> o2) {
                 return ((Integer) o1.getValue().getRemainingCapacity())
                         .compareTo((Integer) o2.getValue().getRemainingCapacity());
             }
         });
 
-        HashMap<String, ServerDom> temp = new LinkedHashMap<>();
-        for (Map.Entry<String, ServerDom> aa : list) {
+        HashMap<String, Server> temp = new LinkedHashMap<>();
+        for (Map.Entry<String, Server> aa : list) {
             temp.put(aa.getKey(), aa.getValue());
         }
         return temp;

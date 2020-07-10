@@ -2,8 +2,7 @@ package com.Exalt.MultiThreading.Domain.Service;
 
 import com.Exalt.MultiThreading.Application.Dto.ServerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.ServerMapper;
-import com.Exalt.MultiThreading.Infrastructure.Repository.ServerRepository;
-import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
+import com.Exalt.MultiThreading.Domain.Repository.ServerRepository;
 import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
 import com.Exalt.MultiThreading.Domain.validation.ServerValidation;

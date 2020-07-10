@@ -19,6 +19,7 @@ public class ServerController {
         return new ResponseEntity(serverService.getServers(), HttpStatus.OK);
     }
 
+    
     @GetMapping("/{id}")
     public ResponseEntity getServer(@PathVariable("id") String id) {
         ServerDto serverDto = serverService.getServer(id);

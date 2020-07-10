@@ -3,8 +3,7 @@ package com.Exalt.MultiThreading.Domain.Service;
 import com.Exalt.MultiThreading.Domain.Dao.CustomerDao;
 import com.Exalt.MultiThreading.Application.Dto.CustomerDto;
 import com.Exalt.MultiThreading.Domain.Mapper.CustomerMapper;
-import com.Exalt.MultiThreading.Domain.Repository.CustomerRepositoryImp;
-import com.Exalt.MultiThreading.Domain.Dom.ServerProvider;
+import com.Exalt.MultiThreading.Domain.Repository.CustomerRepository;
 import com.Exalt.MultiThreading.Domain.validation.CustomerValidation;
 import com.Exalt.MultiThreading.Domain.validation.RentValidation;
 import com.devskiller.friendly_id.FriendlyId;
@@ -20,7 +19,7 @@ import java.util.List;
 public class CustomerServiceImp implements CustomerService {
 
     @Autowired
-    CustomerRepositoryImp customerRepositoryImp;
+    CustomerRepository customerRepository;
 
     @Autowired
     CustomerMapper customerMapper;
@@ -39,28 +38,36 @@ public class CustomerServiceImp implements CustomerService {
 
     public List<CustomerDto> getCustomers() {
         List<CustomerDto> customerDtos = new ArrayList<>();
-        PageRequest pagable = new PageRequest(0,4 , new Sort(Sort.Direction.DESC,"reservedSpace"));
-        customerRepositoryImp.findAll().forEach(customerDao -> {
+        PageRequest pagable = new PageRequest(0, 4, new Sort(Sort.Direction.ASC, "reservedSpace"));
+        customerRepository.findAll().forEach(customerDao -> {
             customerDtos.add(customerMapper.customerDaoToDto(customerDao));
         });
         return customerDtos;
     }
 
     public CustomerDto getCustomer(String id) {
-        if (customerValidation.validateCustomerId(id) == false) {
-            return null;
+        if (customerValidation.validateCustomerId(id)) {
+            long start;
+            CustomerDto customerDto;
+            start = System.currentTimeMillis();
+            customerDto = customerMapper.customerDaoToDto(customerRepository.findOne(id));
+            System.out.println(System.currentTimeMillis() - start);
+            start = System.currentTimeMillis();
+            customerDto = customerMapper.customerDaoToDto(customerRepository.findOne(id));
+            System.out.println(System.currentTimeMillis() - start);
+            return customerDto;
         }
-        return customerMapper.customerDaoToDto(customerRepositoryImp.findOne(id));
+        return null;
     }
 
     public CustomerDto addCustomer(CustomerDto customerDto) {
         customerDto.setId(friendlyId.createFriendlyId());
-        customerRepositoryImp.save(customerMapper.customerDtoToDao(customerDto));
+        customerRepository.save(customerMapper.customerDtoToDao(customerDto));
         return customerDto;
     }
 
     public CustomerDto updateCustomer(CustomerDto customerDto) {
-        CustomerDao customerDao = customerRepositoryImp.save(customerMapper.customerDtoToDao(customerDto));
+        CustomerDao customerDao = customerRepository.save(customerMapper.customerDtoToDao(customerDto));
         return customerMapper.customerDaoToDto(customerDao);
     }
 
@@ -68,11 +75,11 @@ public class CustomerServiceImp implements CustomerService {
         if (customerValidation.validateCustomerId(id) == false) {
             return false;
         }
-        customerRepositoryImp.delete(id);
+        customerRepository.delete(id);
         return true;
     }
 
     public void deleteCustomers() {
-        customerRepositoryImp.deleteAll();
+        customerRepository.deleteAll();
     }
 }
