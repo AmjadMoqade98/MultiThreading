@@ -1,4 +1,4 @@
-This project is a basic implementation of **server provider system** <br/>
+This project is a simple back-end to simulate **server provider systems**  <br/>
 the **main aim** of the system is to manage multiple requests from multiple customers at the same time<br/>
 and serve all the customer as fast as possible
 <br/>
@@ -20,8 +20,6 @@ suppose that I have a pool of three servers each has a free space of 30 Gigas. A
 3. the second request will enter and try to allocate 50 space. <br/> the system will know that there will be a server with 50 remaining capacity event 
    if it's not ready yet.<br/> the server will open new thread which will allocate the space in the already existed server(if the server wasn't ready 
    yet the thread will wait until it's ready)
-
-_the system is part of multithreading training at exalt technologies_
 
 
 
